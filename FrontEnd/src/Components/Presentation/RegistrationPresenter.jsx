@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from "react";
 import {
     User,
     Mail,
@@ -10,65 +9,7 @@ import {
     ArrowLeft,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import axios from "axios"
-const Registration = () => {
-    document.title = "Registration | CSE Resource Sharing Platform"
-    const [step, setStep] = useState(1);
-    const [isLoading, setIsLoading] = useState(false);
-    const [showpwhash, setShowpwhash] = useState(false);
-
-    const [userData, setUserData] = useState(() => {
-        const saved = localStorage.getItem("registrationData");
-        return saved
-            ? JSON.parse(saved)
-            : { fullName: "", userName: "", email: "", pwhash: "", profileImageLink: "" };
-    });
-
-    const userRef = useRef(userData);
-
-
-    useEffect(() => {
-        userRef.current = userData;
-        localStorage.setItem("registrationData", JSON.stringify(userData));
-    }, [userData]);
-
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const usernameRegex = /^[a-z0-9]+$/;
-    const pwhashRegex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-    const togglepwhashVisibility = () => setShowpwhash(!showpwhash);
-
-    const handleChange = (field, value) => {
-        setUserData((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const handleNext = () => {
-        if (step < 3) setStep(step + 1);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        //console.log("Submitting:", userRef.current);
-        try {
-            const res = axios.post("http://localhost:8080/api/users")
-            if (res.status === 200) {
-                alert("Success")
-                setTimeout(() => {
-                    setIsLoading(false);
-                    localStorage.removeItem("registrationData"); // clear after success
-                }, 2000);
-            }
-            else {
-                throw "Failed"
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
+const RegistrationPresenter = ({ userData, usernameRegex, isLoading, pwhashRegex, emailRegex, showpwhash, step, setStep, handleSubmit, handleChange, handleNext, togglepwhashVisibility }) => {
     return (
         <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50">
             <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
@@ -119,25 +60,25 @@ const Registration = () => {
 
                             <div>
                                 <label
-                                    htmlFor="userName"
+                                    htmlFor="username"
                                     className="text-sm font-medium text-gray-900"
                                 >
-                                    Username
+                                    username
                                 </label>
                                 <div className="relative mt-1">
                                     <input
-                                        id="userName"
+                                        id="username"
                                         type="text"
-                                        value={userData.userName}
-                                        onChange={(e) => handleChange("userName", e.target.value)}
+                                        value={userData.username}
+                                        onChange={(e) => handleChange("username", e.target.value)}
                                         placeholder="Enter your username"
-                                        className={`w-full px-3 py-2 border rounded-md bg-transparent outline-none ${userData.userName &&
-                                            !usernameRegex.test(userData.userName)
+                                        className={`w-full px-3 py-2 border rounded-md bg-transparent outline-none ${userData.username &&
+                                            !usernameRegex.test(userData.username)
                                             ? "border-red-500 focus:ring-red-500"
                                             : "border-gray-300 focus:ring-2 focus:ring-gray-900"
                                             }`}
                                     />
-                                    {userData.userName && usernameRegex.test(userData.userName) && (
+                                    {userData.username && usernameRegex.test(userData.username) && (
                                         <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />
                                     )}
                                 </div>
@@ -148,9 +89,9 @@ const Registration = () => {
                                 onClick={handleNext}
                                 disabled={
                                     !userData.fullName ||
-                                    !userData.userName ||
-                                    userData.userName.length <= 5 ||
-                                    !usernameRegex.test(userData.userName)
+                                    !userData.username ||
+                                    userData.username.length <= 5 ||
+                                    !usernameRegex.test(userData.username)
                                 }
                                 className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium bg-gray-900 text-white hover:bg-gray-800 transition disabled:opacity-50"
                             >
@@ -248,8 +189,8 @@ const Registration = () => {
                                 </h3>
                                 <div className="space-y-2 text-sm">
                                     <div className="flex justify-between">
-                                        <span className="text-gray-600">Username:</span>
-                                        <span className="font-medium">{userData.userName}</span>
+                                        <span className="text-gray-600">username:</span>
+                                        <span className="font-medium">{userData.username}</span>
                                     </div>
                                     <div className="flex justify-between">
                                         <span className="text-gray-600">Name:</span>
@@ -304,7 +245,7 @@ const Registration = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Registration;
+export default RegistrationPresenter

@@ -5,22 +5,41 @@ import NotFound from "./pages/NotFound";
 import Login from "./Components/Login";
 import Registration from "./Components/Registration";
 import ForgotPassword from "./Components/ForgotPassword";
+import { useState } from "react";
+import Notification from "../components/toast";
 
 function App() {
+  const [notification, setNotification] = useState(null);
+
   return (
-    <Router>
-      <Routes>
-        {/* Home */}
-        <Route path="/" element={<HomePage />} />
-        {/* Auth */}
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/signup" element={<Registration />} />
-        <Route path="/auth/forgot" element={<ForgotPassword />} />
-        {/* Catch-all (404) */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+    <>
+      {/* Notification */}
+      {notification && (
+        <Notification
+          type={notification.type}
+          title={notification.title}
+          message={notification.message}
+          showIcon={true}
+          duration={notification.duration}
+          onClose={() => setNotification(null)}
+        />
+      )}
+
+      {/* Routes */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/auth/login" element={<Login />} />
+          <Route
+            path="/auth/signup"
+            element={<Registration setNotification={setNotification} />}
+          />
+          <Route path="/auth/forgot" element={<ForgotPassword />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </>
   );
 }
 
