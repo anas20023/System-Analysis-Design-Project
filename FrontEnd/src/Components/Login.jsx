@@ -1,19 +1,48 @@
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
-const Login = () => {
-    document.title = "Login | CSE Resource Sharing Platform"
+import axios from "axios";
+
+const Login = ({ setNotification }) => {
+    document.title = "Login | CSE Resource Sharing Platform";
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setTimeout(() => setIsLoading(false), 2000); // mock
+        try {
+            const res = await axios.post("http://localhost:8080/api/users/login", {
+                email,
+                password,
+            });
+
+            console.log(res.data);
+
+            setNotification({
+                type: "success",
+                title: "Success!",
+                message: "Login Successfully",
+                duration: 3000,
+            });
+            setEmail('')
+            setPassword('')
+        } catch (e) {
+            setNotification({
+                type: "error",
+                title: "Login Failed!",
+                message: e.response?.data?.message || "Something went wrong. Try again.",
+                duration: 3000,
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -24,21 +53,15 @@ const Login = () => {
                     <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full mb-4">
                         <Lock className="w-6 h-6 text-gray-600" />
                     </div>
-                    <h1 className="text-2xl font-semibold text-gray-900">
-                        Welcome Back
-                    </h1>
-                    <p className="text-sm text-gray-600 mt-1">
-                        Enter your credentials to sign in
-                    </p>
+                    <h1 className="text-2xl font-semibold text-gray-900">Welcome Back</h1>
+                    <p className="text-sm text-gray-600 mt-1">Enter your credentials to sign in</p>
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Email */}
                     <div>
-                        <label
-                            htmlFor="email"
-                            className="text-sm font-medium text-gray-900"
-                        >
+                        <label htmlFor="email" className="text-sm font-medium text-gray-900">
                             Email
                         </label>
                         <div className="relative mt-1">
@@ -53,23 +76,20 @@ const Login = () => {
                                 required
                             />
                         </div>
+                        {email && !emailRegex.test(email) && (
+                            <p className="text-xs text-red-500 mt-1">Enter a valid email address</p>
+                        )}
                     </div>
 
+                    {/* Password */}
                     <div>
                         <div className="flex items-center justify-between">
-                            <label
-                                htmlFor="password"
-                                className="text-sm font-medium text-gray-900"
-                            >
+                            <label htmlFor="password" className="text-sm font-medium text-gray-900">
                                 Password
                             </label>
                             <Link to="/auth/forgot">
-                            <button
-                                className="text-gray-900 text-sm hover:underline"
-                            >
-                                Forgot Password
-                            </button>
-                        </Link>
+                                <p className="text-gray-900 text-sm hover:underline">Forgot Password?</p>
+                            </Link>
                         </div>
                         <div className="relative mt-1">
                             <Lock className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
@@ -87,18 +107,18 @@ const Login = () => {
                                 onClick={togglePasswordVisibility}
                                 className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
                             >
-                                {showPassword ? (
-                                    <EyeOff className="w-4 h-4" />
-                                ) : (
-                                    <Eye className="w-4 h-4" />
-                                )}
+                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                             </button>
                         </div>
+                        {password && password.length < 8 && (
+                            <p className="text-xs text-red-500 mt-1">Password must be at least 8 characters</p>
+                        )}
                     </div>
 
+                    {/* Submit Button */}
                     <button
                         type="submit"
-                        disabled={isLoading}
+                        disabled={!emailRegex.test(email) || !password || password.length < 8}
                         className="w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium bg-gray-900 text-white hover:bg-gray-800 transition disabled:opacity-50"
                     >
                         {isLoading ? (
@@ -117,11 +137,7 @@ const Login = () => {
                     <p className="text-sm text-gray-600">
                         Don’t have an account?{" "}
                         <Link to="/auth/signup">
-                            <button
-                                className="text-gray-900 font-medium hover:underline"
-                            >
-                                Sign up
-                            </button>
+                            <button className="text-gray-900 font-medium hover:underline">Sign up</button>
                         </Link>
                     </p>
                 </div>

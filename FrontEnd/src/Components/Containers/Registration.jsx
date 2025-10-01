@@ -5,7 +5,7 @@ import RegistrationPresenter from "../Presentation/RegistrationPresenter";
 import Notification from "../../../components/toast"
 
 
-const Registration = ({setNotification}) => {
+const Registration = ({ setNotification }) => {
     document.title = "Registration | CSE Resource Sharing Platform"
     const [step, setStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
@@ -45,30 +45,35 @@ const Registration = ({setNotification}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-        //console.log("Submitting:", userRef.current);
+
         try {
-            const res = await axios.post("http://localhost:8080/api/users", userData)
-            if (res.status === 200) {
-                // alert("Registration Successful ✅");
-                localStorage.removeItem("registrationData");
-                setIsLoading(false);
-                setTimeout(() => {
-                    navigate("/auth/login");
-                }, 3000);
-                 setNotification({
+            const res = await axios.post("http://localhost:8080/api/users/new", userData);
+            localStorage.removeItem("registrationData");
+            setNotification({
                 type: "success",
                 title: "Success!",
-                message: "Account Created Successfully",
-                duration: 3000
+                message: res.response?.data?.message,
+                duration: 3000,
             });
-            } else {
-                throw new Error("Registration Failed ❌");
-            }
+
+            // Redirect after notification
+            setTimeout(() => {
+                navigate("/auth/login");
+            }, 3000);
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            setNotification({
+                type: "error",
+                title: "Registration Failed!",
+                message: error.response?.data?.message || "Something went wrong. Please try again.",
+                duration: 3000,
+            });
+        } finally {
+            setIsLoading(false);
         }
     };
+
 
     return (
         <RegistrationPresenter userData={userData} usernameRegex={usernameRegex} isLoading={isLoading} pwhashRegex={pwhashRegex} emailRegex={emailRegex} showpwhash={showpwhash} step={step} setStep={setStep} handleSubmit={handleSubmit} handleChange={handleChange} handleNext={handleNext} togglepwhashVisibility={togglepwhashVisibility} />
