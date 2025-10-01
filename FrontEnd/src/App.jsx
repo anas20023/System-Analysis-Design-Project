@@ -3,7 +3,7 @@ import AuthPage from "./pages/AuthPage";
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/NotFound";
 import Login from "./Components/Login";
-import Registration from "./Components/Registration";
+import Registration from "./Components/Containers/Registration";
 import ForgotPassword from "./Components/ForgotPassword";
 import { useState } from "react";
 import Notification from "../components/toast";

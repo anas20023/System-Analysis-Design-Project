@@ -1,6 +1,6 @@
 import ForgotPassword from "../Components/ForgotPassword"
 import Login from "../Components/Login"
-import Registration from "../Components/Registration"
+import Registration from "../Components/Containers/Registration"
 
 const AuthPage = () => {
   return (
