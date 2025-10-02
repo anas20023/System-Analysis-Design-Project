@@ -15,19 +15,21 @@ function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isTokenValid()) {
+        if (isAuthenticated) {
+          setNotification({
+            type: "error",
+            title: "Session Expired",
+            message: "Please log in again.",
+            duration: 3000,
+          });
+        }
         setIsAuthenticated(false);
         removeToken();
-        setNotification({
-          type: "error",
-          title: "Session Expired",
-          message: "Please log in again.",
-          duration: 3000,
-        });
       }
     }, 60000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return (
     <>
