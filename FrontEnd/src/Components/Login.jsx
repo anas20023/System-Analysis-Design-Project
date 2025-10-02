@@ -23,21 +23,22 @@ const Login = ({ setNotification }) => {
                 password,
             });
 
-            console.log(res.data);
+            console.log(res);
 
             setNotification({
                 type: "success",
                 title: "Success!",
-                message: "Login Successfully",
+                message: e.response?.data?.message,
                 duration: 3000,
             });
             setEmail('')
             setPassword('')
         } catch (e) {
+            console.log(e);
             setNotification({
                 type: "error",
                 title: "Login Failed!",
-                message: e.response?.data?.message || "Something went wrong. Try again.",
+                message: e.response?.data?.error || "Something went wrong. Try again.",
                 duration: 3000,
             });
         } finally {
