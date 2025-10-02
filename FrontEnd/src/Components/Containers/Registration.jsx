@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import RegistrationPresenter from "../Presentation/RegistrationPresenter";
-import Notification from "../../../components/toast"
 
 
 const Registration = ({ setNotification }) => {
