@@ -1,14 +1,33 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/NotFound";
 import Login from "./Components/Login";
 import Registration from "./Components/Containers/Registration";
 import ForgotPassword from "./Components/ForgotPassword";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Notification from "../components/toast";
+import { isTokenValid, removeToken } from "./utils/auth";
 
 function App() {
   const [notification, setNotification] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(isTokenValid());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isTokenValid()) {
+        setIsAuthenticated(false);
+        removeToken();
+        setNotification({
+          type: "error",
+          title: "Session Expired",
+          message: "Please log in again.",
+          duration: 3000,
+        });
+      }
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -27,13 +46,25 @@ function App() {
       {/* Routes */}
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/auth/login" element={<Login setNotification={setNotification} />} />
+          {/* If token valid → show Home, else → Login */}
+          <Route
+            path="/"
+            element={<HomePage />}
+          />
+          <Route
+            path="/"
+            element={!isAuthenticated && <Login setNotification={setNotification} />}
+          />
+          <Route
+            path="/auth/login"
+            element={<Login setNotification={setNotification} />}
+          />
 
           <Route
             path="/auth/signup"
             element={<Registration setNotification={setNotification} />}
           />
+
           <Route path="/auth/forgot" element={<ForgotPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
