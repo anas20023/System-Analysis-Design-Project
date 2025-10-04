@@ -1,56 +1,6 @@
-import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { saveToken } from "../utils/auth";
-const Login = ({ setNotification }) => {
-    const navigate = useNavigate();
-    document.title = "Login | CSE Resource Sharing Platform";
-
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        try {
-            const res = await axios.post("http://localhost:8080/api/users/login", {
-                email,
-                password,
-            });
-
-            const token = res.data?.token;
-            if (token) {
-                saveToken(token);
-            }
-            console.log(res.data?.user);
-            setNotification({
-                type: "success",
-                title: "Success!",
-                message: res.data?.message || "Login successful!",
-                duration: 3000,
-            });
-            navigate("/");
-            setEmail("");
-            setPassword("");
-        } catch (e) {
-            console.log(e);
-            setNotification({
-                type: "error",
-                title: "Login Failed!",
-                message: e.response?.data?.error || "Something went wrong. Try again.",
-                duration: 3000,
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
+import { Link } from "react-router-dom";
+const LoginPresenter = ({ onhandleSubmit, email, setEmail, emailRegex, password, setPassword, showPassword, togglePasswordVisibility, isLoading }) => {
     return (
         <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50">
             <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
@@ -64,7 +14,7 @@ const Login = ({ setNotification }) => {
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={onhandleSubmit} className="space-y-5">
                     {/* Email */}
                     <div>
                         <label htmlFor="email" className="text-sm font-medium text-gray-900">
@@ -149,7 +99,7 @@ const Login = ({ setNotification }) => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default Login;
+export default LoginPresenter

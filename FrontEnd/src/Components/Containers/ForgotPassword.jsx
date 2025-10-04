@@ -1,0 +1,39 @@
+import { useState } from "react";
+import ForgetPresenter from "../Presentation/ForgetPresenter";
+const ForgotPassword = () => {
+    const [step, setStep] = useState(1);
+    const [email, setEmail] = useState("");
+    const [code, setCode] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+    const handleSendCode = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        // Mock: simulate sending code
+        //console.log(email);
+        setTimeout(() => {
+            setIsLoading(false);
+            setStep(2);
+        }, 1500);
+    };
+
+    const handleResetPassword = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        // Mock: simulate password reset
+        setTimeout(() => {
+            setIsLoading(false);
+            setStep(3);
+        }, 1500);
+    };
+
+    return (
+        <ForgetPresenter step={step} onhandleSendCode={handleSendCode} email={email} setEmail={setEmail} isLoading={isLoading} onhandleResetPassword={handleResetPassword} code={code} setCode={setCode} showPassword={showPassword} newPassword={newPassword} setNewPassword={setNewPassword} togglePasswordVisibility={togglePasswordVisibility} />
+    );
+};
+
+export default ForgotPassword;

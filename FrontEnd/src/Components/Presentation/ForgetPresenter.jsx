@@ -1,36 +1,8 @@
-import { useState } from "react";
+
 import { Mail, Lock, Check, Eye, EyeOff } from "lucide-react";
-import {Link} from "react-router-dom"
-const ForgotPassword = () => {
-    const [step, setStep] = useState(1);
-    const [email, setEmail] = useState("");
-    const [code, setCode] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+import { Link } from "react-router-dom"
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
-    const handleSendCode = (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        // Mock: simulate sending code
-        setTimeout(() => {
-            setIsLoading(false);
-            setStep(2);
-        }, 1500);
-    };
-
-    const handleResetPassword = (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        // Mock: simulate password reset
-        setTimeout(() => {
-            setIsLoading(false);
-            setStep(3);
-        }, 1500);
-    };
-
+const ForgetPresenter = ({ step, onhandleSendCode, email, setEmail, isLoading, onhandleResetPassword, code, setCode, showPassword, newPassword, setNewPassword, togglePasswordVisibility }) => {
     return (
         <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50 font-[archivo]">
             <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
@@ -52,7 +24,7 @@ const ForgotPassword = () => {
 
                 {/* Step 1: Email input */}
                 {step === 1 && (
-                    <form onSubmit={handleSendCode} className="space-y-5">
+                    <form onSubmit={onhandleSendCode} className="space-y-5">
                         <div>
                             <label htmlFor="email" className="text-sm font-medium text-gray-900">
                                 Email
@@ -82,7 +54,7 @@ const ForgotPassword = () => {
 
                 {/* Step 2: Enter code + new password */}
                 {step === 2 && (
-                    <form onSubmit={handleResetPassword} className="space-y-5">
+                    <form onSubmit={onhandleResetPassword} className="space-y-5">
                         <div>
                             <label htmlFor="code" className="text-sm font-medium text-gray-900">
                                 Verification Code
@@ -151,7 +123,7 @@ const ForgotPassword = () => {
                 )}
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ForgotPassword;
+export default ForgetPresenter

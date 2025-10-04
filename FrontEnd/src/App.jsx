@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import NotFound from "./pages/NotFound";
-import Login from "./Components/Login";
+import Login from "./Components/Containers/Login";
 import Registration from "./Components/Containers/Registration";
-import ForgotPassword from "./Components/ForgotPassword";
+import ForgotPassword from "./Components/Containers/ForgotPassword";
 import { useState, useEffect } from "react";
 import Notification from "../components/toast";
 import { isTokenValid, removeToken } from "./utils/auth";
