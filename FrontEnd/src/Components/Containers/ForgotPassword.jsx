@@ -13,22 +13,25 @@ const ForgotPassword = () => {
     const handleSendCode = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Mock: simulate sending code
-        //console.log(email);
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+           //APi Route Will Apear Here 
+        } catch (error) {
+            console.log(error);
+        }finally{
             setStep(2);
-        }, 1500);
+        }
     };
 
     const handleResetPassword = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        // Mock: simulate password reset
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+           //APi Route Will Apear Here 
+        } catch (error) {
+            console.log(error);
+        }finally{
             setStep(3);
-        }, 1500);
+        }
     };
 
     return (

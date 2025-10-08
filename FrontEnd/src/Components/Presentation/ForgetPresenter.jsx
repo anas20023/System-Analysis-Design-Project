@@ -3,6 +3,8 @@ import { Mail, Lock, Check, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom"
 
 const ForgetPresenter = ({ step, onhandleSendCode, email, setEmail, isLoading, onhandleResetPassword, code, setCode, showPassword, newPassword, setNewPassword, togglePasswordVisibility }) => {
+    const pwhashRegex =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return (
         <div className="flex items-center justify-center min-h-screen px-4 bg-gray-50 font-[archivo]">
             <div className="w-full max-w-md bg-white border border-gray-200 rounded-2xl shadow-lg p-6">
@@ -94,6 +96,12 @@ const ForgetPresenter = ({ step, onhandleSendCode, email, setEmail, isLoading, o
                                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
+                            {newPassword && !pwhashRegex.test(newPassword) && (
+                                    <p className="text-xs text-red-500 mt-1">
+                                        Password must be 8+ chars, include uppercase, lowercase,
+                                        number, and special character
+                                    </p>
+                                )}
                         </div>
                         <button
                             type="submit"

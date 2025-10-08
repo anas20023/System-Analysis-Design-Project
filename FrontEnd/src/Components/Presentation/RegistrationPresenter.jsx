@@ -160,7 +160,7 @@ const RegistrationPresenter = ({ userData, usernameRegex, isLoading, pwhashRegex
                                 </div>
                                 {userData.pwhash && !pwhashRegex.test(userData.pwhash) && (
                                     <p className="text-xs text-red-500 mt-1">
-                                        pwhash must be 8+ chars, include uppercase, lowercase,
+                                        Password must be 8+ chars, include uppercase, lowercase,
                                         number, and special character
                                     </p>
                                 )}
