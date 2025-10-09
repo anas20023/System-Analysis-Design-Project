@@ -8,7 +8,6 @@ public class EnvConfig {
         dotenv.entries().forEach(entry ->
 
         {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
             System.setProperty(entry.getKey(), entry.getValue());
         });
     }
