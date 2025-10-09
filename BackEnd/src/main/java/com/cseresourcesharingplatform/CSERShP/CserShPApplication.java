@@ -2,7 +2,6 @@ package com.cseresourcesharingplatform.CSERShP;
 
 
 import com.cseresourcesharingplatform.CSERShP.config.EnvConfig;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
