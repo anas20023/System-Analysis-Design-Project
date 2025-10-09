@@ -1,5 +1,7 @@
 import { useState } from "react";
 import ForgetPresenter from "../Presentation/ForgetPresenter";
+import axios from 'axios'
+
 const ForgotPassword = () => {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
@@ -7,14 +9,16 @@ const ForgotPassword = () => {
     const [newPassword, setNewPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const url=import.meta.env.VITE_SERVER;
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
-    const handleSendCode = (e) => {
+    const handleSendCode = async(e) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-           //APi Route Will Apear Here 
+           const res=await axios.post(`${url}/users/forgot`,{email:email})
+           console.log(res);
         } catch (error) {
             console.log(error);
         }finally{

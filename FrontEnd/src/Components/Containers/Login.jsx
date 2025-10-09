@@ -22,7 +22,7 @@ const Login = ({ setNotification }) => {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const res = await axios.post("http://localhost:8080/api/users/login", {
+            const res = await axios.post(`${import.meta.env.VITE_SERVER}/users/login`, {
                 email,
                 password,
             });

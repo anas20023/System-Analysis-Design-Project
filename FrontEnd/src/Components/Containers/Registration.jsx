@@ -46,7 +46,7 @@ const Registration = ({ setNotification }) => {
         setIsLoading(true);
 
         try {
-            const res = await axios.post("http://localhost:8080/api/users/new", userData);
+            const res = await axios.post(`${import.meta.env.VITE_SERVER}/users/new`, userData);
             localStorage.removeItem("registrationData");
             setNotification({
                 type: "success",
