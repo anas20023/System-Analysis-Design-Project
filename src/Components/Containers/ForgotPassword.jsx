@@ -17,12 +17,13 @@ const ForgotPassword = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-           const res=await axios.post(`${url}users/forgot`,{email:email})
-           console.log(res);
+           const res=await axios.post(`${url}/users/forgot`,{email:email})
+           alert(res.data);
+           setStep(2);
         } catch (error) {
-            console.log(error);
-        }finally{
-            setStep(2);
+            alert(error.response.data);
+            setIsLoading(false);
+            setEmail("");
         }
     };
 

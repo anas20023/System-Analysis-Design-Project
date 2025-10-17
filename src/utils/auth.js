@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-
+import axios from "axios";
 
 export const saveToken = (token) => {
   const expiryTime = new Date().getTime() + 5 * 60 * 60 * 1000; // 5h in ms
@@ -41,3 +41,16 @@ export const removeToken = () => {
   Cookies.remove("authToken");
   Cookies.remove("authTokenExpiry");
 };
+export const checkAuth = async () => {
+  try {
+    const res = await axios.get("http://localhost:8080/api/auth/check", {
+      withCredentials: true,
+    });
+    return res.data; 
+  } catch (e) {
+    console.log(e);
+    removeToken();
+    window.location.href = "/login";
+    return null;
+  }
+}

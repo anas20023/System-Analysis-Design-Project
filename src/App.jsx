@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Notification from "../components/toast";
 import { isTokenValid, removeToken } from "./utils/auth";
 import ProfilePage from "./pages/ProfilePage";
+import Manage from "./pages/Manage";
 
 function App() {
   const [notification, setNotification] = useState(null);
@@ -30,7 +31,7 @@ function App() {
     }, 60000);
 
     return () => clearInterval(interval);
-  });
+  },);
 
   return (
     <>
@@ -70,6 +71,7 @@ function App() {
 
           <Route path="/auth/forgot" element={<ForgotPassword />} />
           <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/manage" element={<Manage/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
