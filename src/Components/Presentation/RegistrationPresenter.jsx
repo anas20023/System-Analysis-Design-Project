@@ -63,7 +63,7 @@ const RegistrationPresenter = ({ userData, usernameRegex, isLoading, pwhashRegex
                                     htmlFor="username"
                                     className="text-sm font-medium text-gray-900"
                                 >
-                                    username
+                                    Username
                                 </label>
                                 <div className="relative mt-1">
                                     <input
@@ -72,16 +72,20 @@ const RegistrationPresenter = ({ userData, usernameRegex, isLoading, pwhashRegex
                                         value={userData.username}
                                         onChange={(e) => handleChange("username", e.target.value)}
                                         placeholder="Enter your username"
-                                        className={`w-full px-3 py-2 border rounded-md bg-transparent outline-none ${userData.username &&
-                                            !usernameRegex.test(userData.username)
-                                            ? "border-red-500 focus:ring-red-500"
-                                            : "border-gray-300 focus:ring-2 focus:ring-gray-900"
+                                        className={`w-full px-3 py-2 border rounded-md bg-transparent outline-none ${userData.username && !usernameRegex.test(userData.username)
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "border-gray-300 focus:ring-2 focus:ring-gray-900"
                                             }`}
                                     />
                                     {userData.username && usernameRegex.test(userData.username) && (
                                         <Check className="absolute right-3 top-2.5 w-4 h-4 text-green-500" />
                                     )}
                                 </div>
+                                {userData.username && !usernameRegex.test(userData.username) && (
+                                    <p className="text-xs text-red-500 mt-1">
+                                        Only letters and numbers allowed. No spaces.
+                                    </p>
+                                )}
                             </div>
 
                             <button
@@ -99,8 +103,6 @@ const RegistrationPresenter = ({ userData, usernameRegex, isLoading, pwhashRegex
                             </button>
                         </div>
                     )}
-
-                    {/* Step 2 */}
                     {step === 2 && (
                         <div className="space-y-4 animate-fadeIn">
                             <div>

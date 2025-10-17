@@ -29,7 +29,7 @@ const Registration = ({ setNotification }) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const usernameRegex = /^[a-z0-9]+$/;
     const pwhashRegex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#+=_\-^().,])[A-Za-z\d@$!%*?&#+=_\-^().,]{8,}$/;
 
     const togglepwhashVisibility = () => setShowpwhash(!showpwhash);
 

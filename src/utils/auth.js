@@ -30,6 +30,7 @@ export const isTokenValid = () => {
   if (now > parseInt(expiry)) {
     // expired → remove
     removeToken();
+    localStorage.removeItem("userinfo");
     return false;
   }
 

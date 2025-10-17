@@ -5,6 +5,7 @@ const HomePage = () => {
   document.title = "Home | CSE Resource Sharing Platform"
   const navigate = useNavigate();
   const handleLogout = () => {
+
     removeToken()
     navigate("/");
   }

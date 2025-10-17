@@ -17,7 +17,7 @@ const ForgotPassword = () => {
         e.preventDefault();
         setIsLoading(true);
         try {
-           const res=await axios.post(`${url}/users/forgot`,{email:email})
+           const res=await axios.post(`${url}users/forgot`,{email:email})
            console.log(res);
         } catch (error) {
             console.log(error);

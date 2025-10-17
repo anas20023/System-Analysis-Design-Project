@@ -52,15 +52,17 @@ const Navbar = ({ onLogout }) => {
         </div>
 
         {/* Right side: Upload + Auth */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center space-x-8">
           <Link to="/upload" className="flex items-center text-gray-600 hover:text-gray-900">
             <Upload size={18} className="mr-1" /> Upload
           </Link>
 
           {isTokenValid() ? (
             <>
-              <Link to="/profile">
-                <User size={22} className="text-gray-600 hover:text-gray-900" />
+            
+              <Link to="/profile" className="text-gray-600 hover:text-gray-900 flex flex-row gap-0.5">
+                <User size={22} />
+                <p>Profile</p>
               </Link>
               <button
                 onClick={onLogout}

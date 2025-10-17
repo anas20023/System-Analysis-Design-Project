@@ -31,7 +31,8 @@ const Login = ({ setNotification }) => {
             if (token) {
                 saveToken(token);
             }
-            console.log(res.data?.user);
+           // console.log(res.data?.user);
+           localStorage.setItem("userinfo",JSON.stringify(res.data?.user));
             setNotification({
                 type: "success",
                 title: "Success!",

@@ -7,6 +7,7 @@ import ForgotPassword from "./Components/Containers/ForgotPassword";
 import { useState, useEffect } from "react";
 import Notification from "../components/toast";
 import { isTokenValid, removeToken } from "./utils/auth";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const [notification, setNotification] = useState(null);
@@ -68,6 +69,7 @@ function App() {
           />
 
           <Route path="/auth/forgot" element={<ForgotPassword />} />
+          <Route path="/profile" element={<ProfilePage/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
