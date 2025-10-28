@@ -1,0 +1,52 @@
+  const plans = [
+    {
+      name: "Free",
+      price: "$0",
+      period: "forever",
+      description: "Basic access to community resources",
+      features: [
+        "Limited downloads (10/month)",
+        "Standard quality resources",
+        "Community support",
+        "Basic search filters",
+      ],
+      buttonText: "Get Started",
+      buttonVariant: "outline",
+      popular: false,
+    },
+    {
+      name: "Pro",
+      price:"$9.99",
+      period:  "per month",
+      description: "Perfect for serious students",
+      features: [
+        "Unlimited downloads",
+        "High-quality premium resources",
+        "Ad-free experience",
+        "Priority customer support",
+        "Early access to new content",
+        "Advanced search filters",
+      ],
+      buttonText: "Start Free Trial",
+      buttonVariant: "primary",
+      popular: true,
+    },
+    {
+      name: "Institution",
+      price: "Custom",
+      period: "per year",
+      description: "For universities and organizations",
+      features: [
+        "Unlimited team accounts",
+        "Custom resource hosting",
+        "Dedicated support manager",
+        "API access",
+        "Custom branding",
+        "Advanced analytics",
+      ],
+      buttonText: "Contact Sales",
+      buttonVariant: "outline",
+      popular: false,
+    },
+  ];
+  export default plans

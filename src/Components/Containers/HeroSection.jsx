@@ -1,4 +1,5 @@
 import { ChevronDown } from 'lucide-react';
+import Button from '../../../components/button';
 const HeroSection = () => {
   return (
     <div className="relative h-screen bg-cover bg-center bg-no-repeat"
@@ -17,12 +18,12 @@ const HeroSection = () => {
             Find the best study materials, projects, and resources curated for computer science students.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="bg-slate-800 hover:bg-slate-700 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200">
+            <Button>
               Get Started
-            </button>
-            <button className="border border-white hover:bg-white hover:text-slate-800 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200">
+            </Button>
+            <Button variant='secondary'>
               Learn More
-            </button>
+            </Button>
           </div>
 
           {/* Stats section */}
