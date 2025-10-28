@@ -1,3 +1,4 @@
+import HeroSection from "../Components/Containers/HeroSection";
 import Nabvar from "../Components/Nabvar"
 import { removeToken } from "../utils/auth";
 import { useNavigate } from "react-router-dom"
@@ -12,6 +13,7 @@ const HomePage = () => {
   return (
     <section className="flex flex-col font-[archivo]">
       <Nabvar onLogout={handleLogout} />
+      <HeroSection/>  
     </section>
   )
 }
