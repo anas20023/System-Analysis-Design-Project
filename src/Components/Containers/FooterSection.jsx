@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { 
-  Github, 
-  Twitter, 
-  Linkedin, 
-  Mail, 
-  MapPin, 
-  Phone, 
+import {
+  Github,
+  Twitter,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
   ArrowRight,
   Heart,
   Download,
@@ -47,11 +47,6 @@ const Footer = () => {
     ],
   };
 
-  const stats = [
-    { icon: Download, number: "50K+", label: "Resources Downloaded" },
-    { icon: BookOpen, number: "10K+", label: "Learning Materials" },
-    { icon: Users, number: "25K+", label: "Active Students" },
-  ];
 
   const socialLinks = [
     { icon: Github, href: "https://github.com", name: "GitHub" },
@@ -62,26 +57,6 @@ const Footer = () => {
 
   return (
     <footer className="bg-slate-900 text-white">
-      {/* Stats Section */}
-      <div className="border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12 py-12">
-            {stats.map((stat, index) => (
-              <div key={index} className="flex flex-col items-center text-center">
-                <div className="flex items-center justify-center w-12 h-12 bg-slate-800 rounded-lg mb-3">
-                  <stat.icon size={24} className="text-slate-300" />
-                </div>
-                <div className="text-2xl font-bold text-white font-[archivo]">
-                  {stat.number}
-                </div>
-                <div className="text-sm text-slate-300 mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -94,10 +69,10 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-slate-300 mb-6 leading-relaxed">
-              Empowering computer science students with high-quality educational resources, 
+              Empowering computer science students with high-quality educational resources,
               study materials, and a collaborative learning community.
             </p>
-            
+
             {/* Contact Info */}
             <div className="flex flex-col gap-3 mb-6">
               <div className="flex items-center text-slate-300">
@@ -123,9 +98,9 @@ const Footer = () => {
                   className="flex items-center justify-center w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-lg transition-all duration-200 group"
                   aria-label={social.name}
                 >
-                  <social.icon 
-                    size={18} 
-                    className="text-slate-300 group-hover:text-white transition-colors" 
+                  <social.icon
+                    size={18}
+                    className="text-slate-300 group-hover:text-white transition-colors"
                   />
                 </a>
               ))}
@@ -216,7 +191,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Newsletter Subscription */}
+        {/* Newsletter Subscription
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mt-12 pt-12 border-t border-slate-700">
           <div className="flex flex-col lg:flex-1">
             <h3 className="font-bold text-white font-[archivo] mb-2 text-lg">
@@ -237,7 +212,7 @@ const Footer = () => {
               Subscribe
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Bottom Bar */}
@@ -249,7 +224,7 @@ const Footer = () => {
               <Heart size={14} className="mx-1 text-red-400 fill-current" />
               <span>for students worldwide.</span>
             </div>
-            
+
             <div className="flex items-center gap-6 text-sm text-slate-400">
               <Link to="/privacy" className="hover:text-white transition-colors">
                 Privacy

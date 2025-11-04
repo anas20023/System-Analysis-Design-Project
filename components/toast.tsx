@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React from "react";
+
 // Define the props for our Icon components
 interface IconProps {
   className?: string;
@@ -66,11 +67,41 @@ export interface NotificationProps {
 }
 
 const notificationConfig = {
-  info: { icon: <InfoIcon className="h-6 w-6 text-blue-500" /> },
-  success: { icon: <SuccessIcon className="h-6 w-6 text-green-500" /> },
-  warning: { icon: <WarningIcon className="h-6 w-6 text-yellow-500" /> },
-  error: { icon: <ErrorIcon className="h-6 w-6 text-red-500" /> },
-  loading: { icon: <LoadingSpinner className="h-6 w-6 text-gray-500" /> },
+  info: { 
+    icon: <InfoIcon className="h-5 w-5 text-blue-600" />,
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+    textColor: "text-blue-800",
+    progressColor: "bg-blue-500"
+  },
+  success: { 
+    icon: <SuccessIcon className="h-5 w-5 text-green-600" />,
+    bgColor: "bg-green-50",
+    borderColor: "border-green-200",
+    textColor: "text-green-800",
+    progressColor: "bg-green-500"
+  },
+  warning: { 
+    icon: <WarningIcon className="h-5 w-5 text-yellow-600" />,
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+    textColor: "text-yellow-800",
+    progressColor: "bg-yellow-500"
+  },
+  error: { 
+    icon: <ErrorIcon className="h-5 w-5 text-red-600" />,
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
+    textColor: "text-red-800",
+    progressColor: "bg-red-500"
+  },
+  loading: { 
+    icon: <LoadingSpinner className="h-5 w-5 text-slate-600" />,
+    bgColor: "bg-slate-50",
+    borderColor: "border-slate-200",
+    textColor: "text-slate-800",
+    progressColor: "bg-slate-500"
+  },
 };
 
 const Notification: React.FC<NotificationProps> = ({
@@ -95,30 +126,36 @@ const Notification: React.FC<NotificationProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 50 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 50 }}
-      transition={{ duration: 0.3 }}
-      className={`fixed ${positionClasses[position]} z-50 max-w-sm w-full rounded-xl p-4 border backdrop-blur-md bg-white/80 dark:bg-gray-900/80 dark:border-gray-700/50 shadow-lg`}
+      initial={{ opacity: 0, y: -20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      className={`fixed ${positionClasses[position]} z-50 max-w-sm w-full rounded-lg border shadow-lg ${config.bgColor} ${config.borderColor}`}
     >
-      <div className="flex items-center space-x-3">
-        {showIcon && <div>{config.icon}</div>}
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {title}
-          </p>
-          {message && (
-            <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">
-              {message}
-            </p>
+      <div className="p-4">
+        <div className="flex items-start space-x-3">
+          {showIcon && (
+            <div className="flex-shrink-0 mt-0.5">
+              {config.icon}
+            </div>
           )}
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm font-semibold ${config.textColor}`}>
+              {title}
+            </p>
+            {message && (
+              <p className={`text-sm mt-1 ${config.textColor} opacity-90`}>
+                {message}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={onClose}
+            className="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors duration-200"
+          >
+            <CloseIcon className="w-4 h-4" />
+          </button>
         </div>
-        <button
-          onClick={onClose}
-          className="text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
-        >
-          <CloseIcon className="w-4 h-4" />
-        </button>
       </div>
 
       {duration && (
@@ -127,7 +164,7 @@ const Notification: React.FC<NotificationProps> = ({
           animate={{ width: "100%" }}
           transition={{ duration: duration / 1000, ease: "linear" }}
           onAnimationComplete={onClose}
-          className="h-1 bg-gradient-to-r from-green-400 via-blue-400 to-sky-400 rounded-b-md mt-2"
+          className={`h-1 ${config.progressColor} rounded-b-lg`}
         />
       )}
     </motion.div>
