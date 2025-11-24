@@ -1,29 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Download, Eye, Calendar, ArrowRight, FileText, User, Star } from "lucide-react";
-import resources from "../../data/resources"; 
+import axios from "axios";
 
-const DEFAULT_COVER = "https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?w=1200&q=60"; // fallback image
+const DEFAULT_COVER = "https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?w=1200&q=60";
 
 const FeaturedSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [resources, setResources] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Safe getters and fallbacks — backend minimal JSON may not contain these fields
-  const getCategory = (r) => r.category || r.categoryName || "Uncategorized";
-  const getUploaderId = (r) => r.uploaderId ?? r.uploader_id ?? "Unknown";
-  const getFileUrl = (r) => r.fileUrl ?? r.file_url ?? "#";
-  const getCoverImage = (r) => r.cover_image ?? r.coverImage ?? DEFAULT_COVER;
-  const getCreatedAtRaw = (r) => r.createdAt ?? r.created_at ?? null;
-  const getDownloads = (r) => (typeof r.downloads === "number" ? r.downloads : 0);
-  const getViews = (r) => (typeof r.views === "number" ? r.views : 0);
-  const getRating = (r) => (typeof r.rating === "number" ? r.rating : "—");
+  // Fetch resources from API
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${import.meta.env.VITE_SERVER}/resources`);
+        setResources(response.data);
+      } catch (err) {
+        console.error("Error fetching resources:", err);
+        setError("Failed to load resources. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // infer file type from URL if not provided
+    fetchResources();
+  }, []);
+
+  // Safe getters for API data structure
+  const getCategory = (r) => r.category || "Uncategorized";
+  const getUploaderName = (r) => r.uploaderName || "Unknown";
+  const getFileUrl = (r) => r.fileUrl || "#";
+  const getStatus = (r) => r.status || "PENDING";
+  
+  // Get cover image - use document preview for approved resources
+  const getCoverImage = (r) => {
+    // For approved resources, use document-specific preview images
+    if (getStatus(r) === "APPROVED") {
+      const fileType = inferFileType(r);
+      
+      // For PDFs, use PDF preview image
+      if (fileType === "pdf") {
+        return "https://images.unsplash.com/photo-1516251193007-45ef944ab0c6?w=600&h=300&fit=crop&q=80";
+      }
+      
+      // For Word documents, use Word document preview image
+      if (fileType === "docx" || fileType === "doc") {
+        return "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=600&h=300&fit=crop&q=80";
+      }
+      
+      // For ZIP files, use archive preview image
+      if (fileType === "zip") {
+        return "https://images.unsplash.com/photo-1616400619175-5beda1a0a652?w=600&h=300&fit=crop&q=80";
+      }
+    }
+    
+    // Fallback to default cover
+    return DEFAULT_COVER;
+  };
+
+  const getCreatedAt = (r) => r.createdAt || null;
+  const getDownloads = (r) => r.downloadCount || 0;
+  const getViews = (r) => r.viewCount || 0;
+  const getRating = (r) => r.rating || "—";
+
+  // Infer file type from URL
   const inferFileType = (r) => {
-    if (r.file_type) return r.file_type.toLowerCase();
     const url = getFileUrl(r);
     try {
-      const ext = url.split("?")[0].split(".").pop().toLowerCase();
+      const ext = url.split('?')[0].split('.').pop().toLowerCase();
       if (["pdf", "docx", "zip", "pptx", "ppt", "xls", "xlsx"].includes(ext)) return ext;
     } catch (e) {
       console.log(e);
@@ -85,17 +132,75 @@ const FeaturedSection = () => {
     return String(num);
   };
 
-  // categories from data (safe)
+  // Get status badge styling
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "APPROVED":
+        return { bg: "bg-green-100", text: "text-green-800", label: "Approved" };
+      case "PENDING":
+        return { bg: "bg-yellow-100", text: "text-yellow-800", label: "Pending" };
+      case "REJECTED":
+        return { bg: "bg-red-100", text: "text-red-800", label: "Rejected" };
+      default:
+        return { bg: "bg-gray-100", text: "text-gray-800", label: status };
+    }
+  };
+
+  // Filter only approved resources and get top 6
+  const approvedResources = resources
+    .filter(r => getStatus(r) === "APPROVED")
+    // Sort by downloads (or change to your preferred criteria)
+    .sort((a, b) => getDownloads(b) - getDownloads(a))
+    // Take only top 6
+    .slice(0, 6);
+  
+  // Extract categories from approved resources
   const categories = [
     "All",
-    ...Array.from(new Set(resources.map((r) => getCategory(r)))),
+    ...Array.from(new Set(approvedResources.map((r) => getCategory(r)))),
   ];
 
-  // filter
+  // Filter by active category
   const filteredResources =
     activeCategory === "All"
-      ? resources
-      : resources.filter((r) => getCategory(r) === activeCategory);
+      ? approvedResources
+      : approvedResources.filter((r) => getCategory(r) === activeCategory);
+
+  // Loading state
+  if (loading) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-800 mx-auto mb-4"></div>
+            <h2 className="text-xl font-semibold text-slate-800">Loading Resources...</h2>
+            <p className="text-slate-600 mt-2">Please wait while we fetch the latest resources</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="text-red-500 text-6xl mb-4">⚠️</div>
+            <h2 className="text-xl font-semibold text-slate-800 mb-2">Unable to Load Resources</h2>
+            <p className="text-slate-600">{error}</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="mt-4 px-6 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-16 bg-gray-50">
@@ -106,7 +211,7 @@ const FeaturedSection = () => {
             Featured Resources
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover valuable academic resources shared by the CSE community
+            Discover top approved academic resources shared by the CSE community
           </p>
         </div>
 
@@ -136,11 +241,13 @@ const FeaturedSection = () => {
             const fileTypeDisplay = getFileTypeDisplay(fileType);
             const fileColor = getFileColor(fileType);
             const cover = getCoverImage(resource);
-            const createdAt = getCreatedAtRaw(resource);
+            const createdAt = getCreatedAt(resource);
+            const status = getStatus(resource);
+            const statusBadge = getStatusBadge(status);
 
             return (
               <div
-                key={resource.id ?? `${getUploaderId(resource)}-${resource.title}`}
+                key={resource.id}
                 className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group"
               >
                 {/* Cover Image */}
@@ -153,6 +260,7 @@ const FeaturedSection = () => {
                     }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
+                  
                   {/* File Type Badge */}
                   <div className="absolute top-3 left-3">
                     <span className="bg-white/90 backdrop-blur-sm text-slate-800 text-xs font-medium px-2 py-1 rounded-full flex items-center">
@@ -160,21 +268,23 @@ const FeaturedSection = () => {
                       {fileTypeDisplay}
                     </span>
                   </div>
-                  {/* Rating Badge */}
+                  
+                  {/* Status Badge */}
                   <div className="absolute top-3 right-3">
-                    <span className="bg-black/70 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center">
-                      <Star size={12} className="mr-1 fill-yellow-400 text-yellow-400" />
-                      {getRating(resource)}
+                    <span className={`${statusBadge.bg} ${statusBadge.text} text-xs font-medium px-2 py-1 rounded-full`}>
+                      {statusBadge.label}
                     </span>
                   </div>
+                  
                   {/* Category Badge */}
                   <div className="absolute bottom-3 left-3">
                     <span className="bg-slate-800/90 text-white text-xs font-medium px-2 py-1 rounded-full">
                       {getCategory(resource)}
                     </span>
                   </div>
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                  
+                  {/* Gradient Overlay for better text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
 
                 {/* Resource Content */}
@@ -183,10 +293,10 @@ const FeaturedSection = () => {
                     {resource.title}
                   </h3>
                   <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                    {resource.description ?? "No description provided."}
+                    {resource.description || "No description provided."}
                   </p>
 
-                  {/* Meta */}
+                  {/* Meta Information */}
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 mb-4 space-y-2 sm:space-y-0">
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center" title="Downloads">
@@ -208,15 +318,15 @@ const FeaturedSection = () => {
                     </div>
                   </div>
 
-                  {/* Uploader */}
+                  {/* Uploader Information */}
                   <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                     <div className="flex items-center text-sm text-gray-500">
                       <User size={16} className="mr-2" />
-                      <span>Uploader ID: {getUploaderId(resource)}</span>
+                      <span>By: {getUploaderName(resource)}</span>
                     </div>
                   </div>
 
-                  {/* Actions */}
+                  {/* Action Buttons */}
                   <div className="flex items-center justify-between mt-4">
                     <a
                       href={getFileUrl(resource)}
@@ -228,7 +338,7 @@ const FeaturedSection = () => {
                       Download
                     </a>
                     <Link
-                      to={`/resource/${resource.id ?? ""}`}
+                      to={`/resource/${resource.id}`}
                       className="flex items-center text-slate-800 hover:text-slate-600 font-medium text-sm group/link"
                     >
                       View Details
@@ -245,12 +355,22 @@ const FeaturedSection = () => {
         {filteredResources.length === 0 && (
           <div className="text-center py-12">
             <FileText size={64} className="mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No resources found</h3>
-            <p className="text-gray-500">Try selecting a different category</p>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              {approvedResources.length === 0 
+                ? "No approved resources available" 
+                : "No resources found in this category"
+              }
+            </h3>
+            <p className="text-gray-500">
+              {approvedResources.length === 0 
+                ? "Check back later for approved resources" 
+                : "Try selecting a different category"
+              }
+            </p>
           </div>
         )}
 
-        {/* View All */}
+        {/* View All Button */}
         <div className="text-center mt-12">
           <Link
             to="/resources"
@@ -259,6 +379,16 @@ const FeaturedSection = () => {
             View All Resources
             <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
+        </div>
+
+        {/* Info Notice */}
+        <div className="text-center mt-6">
+          <p className="text-sm text-gray-500">
+            Showing {filteredResources.length} of {approvedResources.length} featured resources
+            {/* {resources.length > approvedResources.length && 
+              ` • ${resources.length - approvedResources.length} pending approval`
+            } */}
+          </p>
         </div>
       </div>
     </section>

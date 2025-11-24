@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import Notification from "../components/toast";
 import { isTokenValid, removeToken } from "./utils/auth";
 import EditProfile from "./Components/Containers/EditProfile";
+import Resources from "./Components/Containers/Resources";
 
 // --- Protected Route wrapper ---
 const ProtectedRoute = ({ children }) => {
@@ -68,6 +69,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/resources" element={<Resources />} />
 
           {/* Public routes */}
           <Route
@@ -108,7 +110,7 @@ function App() {
             path="/profile/edit"
             element={
               <ProtectedRoute>
-                <EditProfile/>
+                <EditProfile />
               </ProtectedRoute>
             }
           />

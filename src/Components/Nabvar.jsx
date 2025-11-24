@@ -19,13 +19,72 @@ const Navbar = ({ onLogout }) => {
   };
 
   const navItems = [
-    { title: "Academic", sub: ["Assignments", "Lecture Notes", "Research Papers"] },
-    { title: "Professional", sub: ["Resumes", "Certifications", "Case Studies"] },
-    { title: "Culture", sub: ["Articles", "Essays", "Stories"] },
-    { title: "Hobbies & Crafts", sub: ["DIY", "Art", "Photography"] },
-    { title: "Personal Growth", sub: ["Books", "Workshops", "Self-Help"] },
-    { title: "All Documents", sub: ["All Types", "Trending", "Recent"] },
+    { 
+      title: "Academic", 
+      sub: [
+        { name: "Assignments", category: "Academic", type: "Assignments" },
+        { name: "Lecture Notes", category: "Academic", type: "Lecture Notes" },
+        { name: "Research Papers", category: "Academic", type: "Research Papers" }
+      ] 
+    },
+    { 
+      title: "Professional", 
+      sub: [
+        { name: "Resumes", category: "Professional", type: "Resumes" },
+        { name: "Certifications", category: "Professional", type: "Certifications" },
+        { name: "Case Studies", category: "Professional", type: "Case Studies" }
+      ] 
+    },
+    { 
+      title: "Culture", 
+      sub: [
+        { name: "Articles", category: "Culture", type: "Articles" },
+        { name: "Essays", category: "Culture", type: "Essays" },
+        { name: "Stories", category: "Culture", type: "Stories" }
+      ] 
+    },
+    { 
+      title: "Hobbies & Crafts", 
+      sub: [
+        { name: "DIY", category: "Hobbies & Crafts", type: "DIY" },
+        { name: "Art", category: "Hobbies & Crafts", type: "Art" },
+        { name: "Photography", category: "Hobbies & Crafts", type: "Photography" }
+      ] 
+    },
+    { 
+      title: "Personal Growth", 
+      sub: [
+        { name: "Books", category: "Personal Growth", type: "Books" },
+        { name: "Workshops", category: "Personal Growth", type: "Workshops" },
+        { name: "Self-Help", category: "Personal Growth", type: "Self-Help" }
+      ] 
+    },
+    { 
+      title: "All Documents", 
+      sub: [
+        { name: "All Types", category: "All", type: "All" },
+        { name: "Trending", category: "All", type: "Trending" },
+        { name: "Recent", category: "All", type: "Recent" }
+      ] 
+    },
   ];
+
+  // Function to build resources URL with query parameters
+  const getResourcesLink = (category, type) => {
+    if (category === "All" && type === "All") {
+      return "/resources";
+    }
+    
+    const params = new URLSearchParams();
+    if (category !== "All") {
+      params.append("category", category);
+    }
+    if (type !== "All") {
+      params.append("type", type);
+    }
+    
+    return `/resources?${params.toString()}`;
+  };
 
   return (
     <header className="w-full border-b border-gray-200 bg-white font-[archivo]">
@@ -138,7 +197,7 @@ const Navbar = ({ onLogout }) => {
                         {item.sub.map((subItem, i) => (
                           <Link
                             key={i}
-                            to={`/${item.title.toLowerCase()}/${subItem.toLowerCase().replace(/ /g, "-")}`}
+                            to={getResourcesLink(subItem.category, subItem.type)}
                             className={`block px-2 py-2 hover:bg-gray-100 rounded transform transition-all duration-300 ease-out text-gray-600 ${
                               dropdownOpen[item.title]
                                 ? "opacity-100 translate-y-0"
@@ -146,7 +205,7 @@ const Navbar = ({ onLogout }) => {
                             }`}
                             onClick={closeMobileMenu}
                           >
-                            {subItem}
+                            {subItem.name}
                           </Link>
                         ))}
                       </div>
@@ -230,15 +289,15 @@ const Navbar = ({ onLogout }) => {
                 >
                   {item.sub.map((subItem, i) => (
                     <Link
-                      key={subItem}
-                      to={`/${item.title.toLowerCase()}/${subItem.toLowerCase().replace(/ /g, "-")}`}
+                      key={subItem.name}
+                      to={getResourcesLink(subItem.category, subItem.type)}
                       className={`block px-4 py-2 text-[11pt] hover:bg-gray-100 transform transition-all duration-300 ease-out
                         ${dropdownOpen[item.title]
                           ? "opacity-100 translate-y-0 delay-" + (i * 75)
                           : "opacity-0 -translate-y-2 delay-0"}
                       `}
                     >
-                      {subItem}
+                      {subItem.name}
                     </Link>
                   ))}
                 </div>

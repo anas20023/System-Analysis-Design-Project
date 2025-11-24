@@ -16,7 +16,8 @@ import {
     FileText,
     CheckCircle,
     Clock,
-    Eye
+    Eye,
+    XCircle
 } from "lucide-react";
 import Button from "../../components/button";
 import { removeToken } from "../utils/auth";
@@ -68,13 +69,24 @@ const ProfilePage = () => {
         fetchProfile();
     }, [navigate]);
 
-    // Calculate stats from actual data
+    // Calculate stats from actual data including declined resources
     const userStats = {
         resourcesUploaded: user.resources?.length || 0,
         approvedResources: user.resources?.filter(r => r.status === "APPROVED").length || 0,
         pendingResources: user.resources?.filter(r => r.status === "PENDING").length || 0,
+        declinedResources: user.resources?.filter(r => r.status === "DECLINED").length || 0,
         downloads: user.resources?.reduce((total, resource) => total + (resource.downloadCount || 0), 0) || 0
     };
+
+    // Calculate approval rate (approved / (approved + declined)) * 100
+    const approvalRate = userStats.approvedResources + userStats.declinedResources > 0 
+        ? Math.round((userStats.approvedResources / (userStats.approvedResources + userStats.declinedResources)) * 100)
+        : 0;
+
+    // Calculate success rate (approved / total) * 100
+    const successRate = userStats.resourcesUploaded > 0
+        ? Math.round((userStats.approvedResources / userStats.resourcesUploaded) * 100)
+        : 0;
 
     // Format date function
     const formatDate = (dateString) => {
@@ -107,6 +119,8 @@ const ProfilePage = () => {
                 return { color: "text-green-600", bg: "bg-green-100", icon: CheckCircle };
             case "PENDING":
                 return { color: "text-yellow-600", bg: "bg-yellow-100", icon: Clock };
+            case "DECLINED":
+                return { color: "text-red-600", bg: "bg-red-100", icon: XCircle };
             default:
                 return { color: "text-gray-600", bg: "bg-gray-100", icon: Clock };
         }
@@ -203,6 +217,14 @@ const ProfilePage = () => {
                                         <span className="text-sm text-slate-600">Pending</span>
                                     </div>
                                     <span className="font-bold text-slate-800">{userStats.pendingResources}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                                    <div className="flex items-center">
+                                        <XCircle size={16} className="text-red-600 mr-2" />
+                                        <span className="text-sm text-slate-600">Declined</span>
+                                    </div>
+                                    <span className="font-bold text-slate-800">{userStats.declinedResources}</span>
                                 </div>
 
                                 <div className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
@@ -309,12 +331,27 @@ const ProfilePage = () => {
                                         </div>
                                         <div>
                                             <div className="text-2xl font-bold text-purple-900">
-                                                {userStats.resourcesUploaded > 0 
-                                                    ? Math.round((userStats.approvedResources / userStats.resourcesUploaded) * 100)
-                                                    : 0
-                                                }%
+                                                {approvalRate}%
                                             </div>
                                             <div className="text-sm text-purple-700">Approval Rate</div>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Additional Stats */}
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-center mt-6 pt-6 border-t border-blue-200">
+                                        <div>
+                                            <div className="text-xl font-bold text-red-900">{userStats.declinedResources}</div>
+                                            <div className="text-sm text-red-700">Declined</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xl font-bold text-indigo-900">{userStats.downloads}</div>
+                                            <div className="text-sm text-indigo-700">Total Downloads</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-xl font-bold text-teal-900">
+                                                {successRate}%
+                                            </div>
+                                            <div className="text-sm text-teal-700">Success Rate</div>
                                         </div>
                                     </div>
                                 </div>
@@ -360,10 +397,16 @@ const ProfilePage = () => {
                                                                 <Calendar size={12} className="mr-1" />
                                                                 {formatDate(resource.createdAt)}
                                                             </span>
-                                                            {resource.approvedAt && (
+                                                            {resource.approvedAt && resource.status === "APPROVED" && (
                                                                 <span className="flex items-center">
                                                                     <CheckCircle size={12} className="mr-1" />
                                                                     Approved {formatRelativeTime(resource.approvedAt)}
+                                                                </span>
+                                                            )}
+                                                            {resource.downloadCount > 0 && (
+                                                                <span className="flex items-center">
+                                                                    <Download size={12} className="mr-1" />
+                                                                    {resource.downloadCount} downloads
                                                                 </span>
                                                             )}
                                                         </div>
