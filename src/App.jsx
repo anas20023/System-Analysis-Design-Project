@@ -10,6 +10,7 @@ import Upload from "./Components/Containers/UploadSection";
 import { useState, useEffect } from "react";
 import Notification from "../components/toast";
 import { isTokenValid, removeToken } from "./utils/auth";
+import EditProfile from "./Components/Containers/EditProfile";
 
 // --- Protected Route wrapper ---
 const ProtectedRoute = ({ children }) => {
@@ -104,10 +105,18 @@ function App() {
             }
           />
           <Route
+            path="/profile/edit"
+            element={
+              <ProtectedRoute>
+                <EditProfile/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/upload"
             element={
               <ProtectedRoute>
-                <Upload />
+                <Upload setNotification={setNotification} />
               </ProtectedRoute>
             }
           />

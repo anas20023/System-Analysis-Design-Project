@@ -15,9 +15,11 @@ import {
     Loader2
 } from "lucide-react";
 import Button from "../../components/button";
+import { removeToken } from "../utils/auth";
 import axios from "axios";
 
 const ProfilePage = () => {
+
     const navigate = useNavigate();
     const [user, setUser] = useState({});
     const [activeTab, setActiveTab] = useState('profile');
@@ -28,14 +30,13 @@ const ProfilePage = () => {
         navigate("/");
     };
 
-    const handleEditProfile = () => {
-        // Navigate to edit profile page
-        console.log("Edit profile clicked");
-    };
+    // const handleEditProfile = () => {
+    //     navigate("/profile/edit");
+    // };
 
     const handleLogout = () => {
-        localStorage.removeItem("userinfo");
-        navigate("/auth/login");
+        removeToken()
+        navigate("/");
     };
 
     // Mock user stats - you can replace this with actual API call
@@ -64,7 +65,7 @@ const ProfilePage = () => {
                     ?.split('=')[1];
 
                 const res = await axios.get(`${import.meta.env.VITE_SERVER}/users/me`, {
-                    withCredentials: true, 
+                    withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         ...(authToken ? { "Authorization": `Bearer ${authToken}` } : {})
@@ -116,14 +117,14 @@ const ProfilePage = () => {
                         Back to Home
                     </button>
                     <div className="flex items-center space-x-4">
-                        <Button
+                        {/* <Button
                             variant="secondary"
                             onClick={handleEditProfile}
                             className="flex items-center"
                         >
                             <Edit3 size={16} className="mr-2" />
                             Edit Profile
-                        </Button>
+                        </Button> */}
                         <Button
                             variant="destructive"
                             onClick={handleLogout}
@@ -209,8 +210,8 @@ const ProfilePage = () => {
                                                 <span className="text-sm text-slate-600">Joined</span>
                                             </div>
                                             <span className="font-bold text-slate-800 text-sm">
-                                                {user.joinedDate ? 
-                                                    new Date(user.joinedDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 
+                                                {user.joinedDate ?
+                                                    new Date(user.joinedDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) :
                                                     new Date(userStats.joinedDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
                                                 }
                                             </span>
@@ -316,12 +317,12 @@ const ProfilePage = () => {
                                                     <div>
                                                         <label className="text-sm text-slate-500">Member Since</label>
                                                         <p className="font-semibold text-slate-800">
-                                                            {user.joinedDate ? 
+                                                            {user.joinedDate ?
                                                                 new Date(user.joinedDate).toLocaleDateString('en-US', {
                                                                     year: 'numeric',
                                                                     month: 'long',
                                                                     day: 'numeric'
-                                                                }) : 
+                                                                }) :
                                                                 new Date(userStats.joinedDate).toLocaleDateString('en-US', {
                                                                     year: 'numeric',
                                                                     month: 'long',

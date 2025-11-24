@@ -1,130 +1,57 @@
-const resources = [
+const resources=[
   {
-    "id": 1,
-    "uploader_id": 5,
+    "uploaderId": 5,
     "title": "Data Structures Lecture Notes",
     "description": "Complete lecture notes for CSE220 including linked lists, stacks, queues, trees and graphs.",
-    "file_url": "https://example.com/uploads/ds_notes.pdf",
-    "created_at": "2025-01-10 14:25:33",
-    "cover_image": "https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Lecture Notes",
-    "file_type": "pdf",
-    "downloads": 1247,
-    "views": 2890,
-    "rating": 4.9
+    "fileUrl": "https://example.com/uploads/ds_notes.pdf"
   },
   {
-    "id": 2,
-    "uploader_id": 8,
+    "uploaderId": 8,
     "title": "EEE Circuit Analysis Solved Problems",
     "description": "Chapter-wise solved problems for EEE lab exam preparation.",
-    "file_url": "https://example.com/uploads/circuit_solved.pdf",
-    "created_at": "2025-02-01 09:12:52",
-    "cover_image": "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Solved Problems",
-    "file_type": "pdf",
-    "downloads": 892,
-    "views": 1567,
-    "rating": 4.7
+    "fileUrl": "https://example.com/uploads/circuit_solved.pdf"
   },
   {
-    "id": 3,
-    "uploader_id": 3,
+    "uploaderId": 3,
     "title": "Software Engineering Final Suggestion",
     "description": "Short notes and important questions for final exam.",
-    "file_url": "https://example.com/uploads/se_final_suggestion.docx",
-    "created_at": "2025-02-05 11:44:21",
-    "cover_image": "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Exam Prep",
-    "file_type": "docx",
-    "downloads": 2103,
-    "views": 4500,
-    "rating": 4.8
+    "fileUrl": "https://example.com/uploads/se_final_suggestion.docx"
   },
   {
-    "id": 4,
-    "uploader_id": 2,
+    "uploaderId": 2,
     "title": "Numerical Methods Matlab Codes",
     "description": "MATLAB scripts for solving equations, interpolation and numerical integration.",
-    "file_url": "https://example.com/uploads/nm_matlab.zip",
-    "created_at": "2025-02-10 16:32:10",
-    "cover_image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Code Files",
-    "file_type": "zip",
-    "downloads": 1567,
-    "views": 3200,
-    "rating": 4.6
+    "fileUrl": "https://example.com/uploads/nm_matlab.zip"
   },
   {
-    "id": 5,
-    "uploader_id": 7,
+    "uploaderId": 7,
     "title": "Database Normalization Notes",
     "description": "Complete notes on database normalization forms with examples and practice problems.",
-    "file_url": "https://example.com/uploads/db_normalization.pdf",
-    "created_at": "2025-02-13 19:12:09",
-    "cover_image": "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Lecture Notes",
-    "file_type": "pdf",
-    "downloads": 987,
-    "views": 2100,
-    "rating": 4.9
+    "fileUrl": "https://example.com/uploads/db_normalization.pdf"
   },
   {
-    "id": 6,
-    "uploader_id": 4,
+    "uploaderId": 4,
     "title": "Operating Systems Concepts Guide",
     "description": "Detailed guide covering process management, memory allocation, and file systems.",
-    "file_url": "https://example.com/uploads/os_concepts.pdf",
-    "created_at": "2025-02-14 10:30:15",
-    "cover_image": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Study Guides",
-    "file_type": "pdf",
-    "downloads": 1345,
-    "views": 2789,
-    "rating": 4.7
+    "fileUrl": "https://example.com/uploads/os_concepts.pdf"
   },
   {
-    "id": 7,
-    "uploader_id": 6,
+    "uploaderId": 6,
     "title": "Computer Networks Lab Manual",
     "description": "Practical lab exercises for computer networks with configuration examples.",
-    "file_url": "https://example.com/uploads/cn_lab_manual.pdf",
-    "created_at": "2025-02-12 08:45:33",
-    "cover_image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Lab Manuals",
-    "file_type": "pdf",
-    "downloads": 876,
-    "views": 1890,
-    "rating": 4.5
+    "fileUrl": "https://example.com/uploads/cn_lab_manual.pdf"
   },
   {
-    "id": 8,
-    "uploader_id": 1,
+    "uploaderId": 1,
     "title": "AI & Machine Learning Projects",
     "description": "Collection of machine learning projects with datasets and source code.",
-    "file_url": "https://example.com/uploads/ai_ml_projects.zip",
-    "created_at": "2025-02-08 14:22:47",
-    "cover_image": "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Projects",
-    "file_type": "zip",
-    "downloads": 1987,
-    "views": 3456,
-    "rating": 4.8
+    "fileUrl": "https://example.com/uploads/ai_ml_projects.zip"
   },
   {
-    "id": 9,
-    "uploader_id": 9,
+    "uploaderId": 9,
     "title": "Discrete Mathematics Solved Exercises",
     "description": "Step-by-step solutions for discrete mathematics problems and proofs.",
-    "file_url": "https://example.com/uploads/discrete_math_solved.pdf",
-    "created_at": "2025-02-07 16:18:29",
-    "cover_image": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80",
-    "category": "Solved Problems",
-    "file_type": "pdf",
-    "downloads": 1123,
-    "views": 2345,
-    "rating": 4.6
+    "fileUrl": "https://example.com/uploads/discrete_math_solved.pdf"
   }
-];
-
-export default resources;
+]
+export default resources
